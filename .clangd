@@ -1,0 +1,11 @@
+CompileFlags:
+  Add: [
+    "-Wextra",
+    "-Wpedantic",
+    "-Wconversion",
+    "-Wno-unused-function",
+    "-Wno-unused-variable",
+    "-Wno-unused-parameter",
+    "-Wno-nested-anon-types",
+    "-Wno-gnu-anonymous-struct"
+  ]

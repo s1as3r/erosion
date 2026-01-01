@@ -29,6 +29,7 @@ COMP_FLAGS=(
     "-Werror"
     "-Wno-unused-parameter"
     "-Wno-unused-function"
+    "-Wno-unused-variable"
     "-O0"
     "-std=c99"
     "-fPIC"

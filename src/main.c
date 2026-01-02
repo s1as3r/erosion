@@ -12,15 +12,17 @@ i32 main(void) {
   const i32 screen_height = 800;
   InitWindow(screen_width, screen_height, "erosion");
 
+  Vector3 initial_camera_position = {18.0f, 21.0f, 18.0f};
+  Vector3 initial_camera_target = {0.0f, 0.0f, 0.0f};
   Camera camera = {0};
-  camera.position = (Vector3){18.0f, 21.0f, 18.0f};
-  camera.target = (Vector3){0.0f, 0.0f, 0.0f};
+  camera.position = initial_camera_position;
+  camera.target = initial_camera_target;
   camera.up = (Vector3){0.0f, 1.0f, 0.0f};
   camera.fovy = 45.0f;
   camera.projection = CAMERA_PERSPECTIVE;
 
-  const u32 dim_x = 128;
-  const u32 dim_y = 128;
+  const u32 dim_x = 256;
+  const u32 dim_y = 256;
   Image image = {.height = dim_y,
                  .width = dim_x,
                  .mipmaps = 1,
@@ -38,6 +40,7 @@ i32 main(void) {
   Texture2D texture = LoadTextureFromImage(image);
   Mesh mesh = GenMeshHeightmap(image, (Vector3){16, 8, 16});
   Model model = LoadModelFromMesh(mesh);
+  model.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = texture;
 
   const f32 slider_x_offset = 10 + (f32)GetTextWidth("lacunarity: ");
   Vector3 map_position = {-8.0f, 0.0f, -8.0f};
@@ -46,8 +49,23 @@ i32 main(void) {
 
   bool change_seed = false;
   bool params_changed = false;
+
+  i32 camera_model_selection = 1;
+  i32 camera_mode;
+
+  bool reset_camera = false;
+  bool camera_dropdown_active = false;
+  bool camera_dropdown_clicked = false;
   while (!WindowShouldClose()) {
-    UpdateCamera(&camera, CAMERA_ORBITAL);
+    if (camera_dropdown_clicked) {
+      camera_dropdown_active = !camera_dropdown_active;
+    }
+    if (reset_camera) {
+      camera.position = initial_camera_position;
+      camera.target = initial_camera_target;
+    }
+    camera_mode = camera_model_selection + 1;
+    UpdateCamera(&camera, camera_mode);
 
     params.octaves = (u32)octaves_f;
     params_changed = (prev_params.octaves != params.octaves) ||
@@ -94,6 +112,16 @@ i32 main(void) {
           (Rectangle){
               .x = slider_x_offset, .y = 100, .height = 30, .width = 200},
           "Change Seed");
+      reset_camera = GuiButton(
+          (Rectangle){
+              .x = slider_x_offset, .y = 160, .height = 30, .width = 200},
+          "Reste Camera");
+
+      camera_dropdown_clicked = GuiDropdownBox(
+          (Rectangle){
+              .x = slider_x_offset, .y = 130, .height = 30, .width = 200},
+          "Free;Orbital", (int *)&camera_model_selection,
+          camera_dropdown_active);
 
       BeginMode3D(camera);
       {

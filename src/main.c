@@ -1,7 +1,8 @@
 // clang-format off
-#include "fbm.c"
 #include "rand.c"
+#include "fbm.c"
 #include "fbm_raylib.c"
+#include "algorithm.c"
 
 #define RAYGUI_IMPLEMENTATION
 #include <raylib.h>
@@ -24,65 +25,92 @@ i32 main(void) {
   camera.fovy = 45.0f;
   camera.projection = CAMERA_PERSPECTIVE;
 
-  FBMState fbm_state;
-  fbm_init(&fbm_state);
+  AlgorithmType algo_selection = 0;
+  AlgorithmType prev_algo_selection = 0;
+  AlgorithmState algo_state = {.type = algo_selection};
+  algo_init(&algo_state);
 
   SetTargetFPS(60);
 
   i32 camera_model_selection = 1;
   i32 camera_mode;
 
+  bool algo_dropdown_clicked = false;
+  bool algo_dropdown_active = false;
+
   bool reset_camera = false;
   bool camera_dropdown_active = false;
   bool camera_dropdown_clicked = false;
   while (!WindowShouldClose()) {
+    if (prev_algo_selection != algo_selection) {
+      algo_cleanup(&algo_state);
+      algo_state.type = algo_selection;
+      algo_init(&algo_state);
+
+      prev_algo_selection = algo_selection;
+    }
+
     if (camera_dropdown_clicked) {
       camera_dropdown_active = !camera_dropdown_active;
     }
+
+    if (algo_dropdown_clicked) {
+      algo_dropdown_active = !algo_dropdown_active;
+    }
+
     if (reset_camera) {
       camera.position = initial_camera_position;
       camera.target = initial_camera_target;
     }
+
     camera_mode = camera_model_selection + 1;
     UpdateCamera(&camera, camera_mode);
 
-    fbm_update_state(&fbm_state);
+    algo_update_state(&algo_state);
 
     BeginDrawing();
     {
       ClearBackground(RAYWHITE);
 
+      algo_dropdown_clicked = GuiDropdownBox(
+          (Rectangle){.x = (screen_width / 2.0f) - 150.0f - 1.0f,
+                      .y = 10.0f,
+                      .height = 30,
+                      .width = 100},
+          "fbm;erosion", (int *)&algo_selection, algo_dropdown_active);
+
       camera_dropdown_clicked =
-          GuiDropdownBox((Rectangle){.x = (screen_width / 2.0f) - 101.0f,
+          GuiDropdownBox((Rectangle){.x = (screen_width / 2.0f) - 50.0f,
                                      .y = 10.0f,
                                      .height = 30,
                                      .width = 100},
                          "Free;Orbital", (int *)&camera_model_selection,
                          camera_dropdown_active);
-      reset_camera = GuiButton((Rectangle){.x = (screen_width / 2.0f) + 1.0f,
-                                           .y = 10.0f,
-                                           .height = 30.0f,
-                                           .width = 100},
-                               "Reset Camera");
+      reset_camera =
+          GuiButton((Rectangle){.x = (screen_width / 2.0f) + 50.0f + 1.0f,
+                                .y = 10.0f,
+                                .height = 30.0f,
+                                .width = 100},
+                    "Reset Camera");
 
-      fbm_draw_ui(&fbm_state);
+      algo_draw_ui(&algo_state);
 
       BeginMode3D(camera);
       {
-        DrawModel(fbm_state.model, map_position, 1.0f, RED);
+        DrawModel(algo_state.model, map_position, 1.0f, RED);
         DrawGrid(20, 1.0f);
       }
       EndMode3D();
 
-      DrawTexture(fbm_state.texture,
-                  screen_width - fbm_state.texture.width - 20, 20, WHITE);
-      DrawRectangleLines(screen_width - fbm_state.texture.width - 20, 20,
-                         fbm_state.texture.width, fbm_state.texture.height,
+      DrawTexture(algo_state.texture,
+                  screen_width - algo_state.texture.width - 20, 20, WHITE);
+      DrawRectangleLines(screen_width - algo_state.texture.width - 20, 20,
+                         algo_state.texture.width, algo_state.texture.height,
                          GREEN);
     }
     EndDrawing();
   }
-  fbm_cleanup(&fbm_state);
+  algo_cleanup(&algo_state);
 
   CloseWindow();
   return 0;

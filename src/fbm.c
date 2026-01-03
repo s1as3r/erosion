@@ -52,7 +52,7 @@ f32 fbm(f32 x, f32 y, FBMParams params) {
   return total / max_val;
 }
 
-void gen_fbm(u8 *data, u32 dim_x, u32 dim_y, FBMParams params) {
+void gen_fbm(u8 *heightmap_data, u32 dim_x, u32 dim_y, FBMParams params) {
   const f32 scale = 0.02f;
   for (u32 y = 0; y < dim_y; y++) {
     for (u32 x = 0; x < dim_x; x++) {
@@ -60,7 +60,7 @@ void gen_fbm(u8 *data, u32 dim_x, u32 dim_y, FBMParams params) {
       const f32 ny = (f32)y * scale;
 
       const f32 noise = (fbm(nx, ny, params) + 1.0f) * 0.5f;
-      *(data + (y * dim_x) + x) = (u8)(noise * (f32)UINT8_MAX);
+      *(heightmap_data + (y * dim_x) + x) = (u8)(noise * (f32)UINT8_MAX);
     }
   }
 }

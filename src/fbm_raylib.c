@@ -5,14 +5,14 @@
 
 global f32 g_slider_x_offset = 0;
 
-void fbm_init(FBMState *state, u32 dim_x, u32 dim_y, u8 *data) {
+void fbm_init(FBMState *state, u32 dim_x, u32 dim_y, u8 *heightmap_data) {
   state->_octaves_f = INITIAL_OCTAVES;
   state->params = (FBMParams){.octaves = (u32)INITIAL_OCTAVES,
                               .lacunarity = INITIAL_LACUNARITY,
                               .gain = INITIAL_GAIN};
   state->prev_params = state->params;
 
-  gen_fbm(data, dim_x, dim_y, state->params);
+  gen_fbm(heightmap_data, dim_x, dim_y, state->params);
 
   i32 fonst_size = GuiGetStyle(DEFAULT, TEXT_SIZE);
   g_slider_x_offset = 10.0f + (f32)MeasureText("lacunarity: ", fonst_size);

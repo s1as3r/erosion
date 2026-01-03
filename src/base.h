@@ -35,4 +35,7 @@ typedef uint64_t usize;
 typedef float f32;
 typedef double f64;
 
+static inline f32 lerp(f32 a, f32 b, f32 t) { return a + t * (b - a); }
+static inline f32 smoothstep(f32 t) { return t * t * (3 - (2 * t)); }
+
 #endif // _H_EROSION_DEFS

@@ -2,6 +2,7 @@
 #include "rand.c"
 #include "fbm.c"
 #include "fbm_raylib.c"
+#include "erosion_raylib.c"
 #include "algorithm.c"
 
 #define RAYGUI_IMPLEMENTATION

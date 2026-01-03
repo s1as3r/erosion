@@ -48,7 +48,8 @@ void algo_init(AlgorithmState *state) {
   ALGO_DISPATCH(state->type,
                 fbm_init(&state->fbm_state, state->dim_x, state->dim_y,
                          (u8 *)state->image.data),
-                {});
+                erosion_init(&state->erosion_state, state->dim_x, state->dim_y,
+                             (u8 *)state->image.data));
 
   state->texture = LoadTextureFromImage(state->image);
   state->mesh = GenMeshHeightmap(state->image, (Vector3){16, 8, 16});
@@ -63,7 +64,8 @@ void _reload_raylib_stuff(AlgorithmState *state) {
   ALGO_DISPATCH(state->type,
                 fbm_gen_data(&state->fbm_state, (u32)state->image.width,
                              (u32)state->image.height, state->image.data),
-                {});
+                erosion_gen_data(&state->erosion_state, state->dim_x,
+                                 state->dim_y, (u8 *)state->image.data));
 
   state->texture = LoadTextureFromImage(state->image);
   state->mesh = GenMeshHeightmap(state->image, (Vector3){16, 8, 16});
@@ -74,7 +76,8 @@ void _reload_raylib_stuff(AlgorithmState *state) {
 void algo_update_state(AlgorithmState *state) {
   bool needs_reload = false;
   ALGO_DISPATCH(state->type,
-                (needs_reload = fbm_update_state(&state->fbm_state)), {});
+                (needs_reload = fbm_update_state(&state->fbm_state)),
+                (needs_reload = erosion_update_state(&state->erosion_state)));
 
   if (needs_reload) {
     _reload_raylib_stuff(state);
@@ -82,7 +85,8 @@ void algo_update_state(AlgorithmState *state) {
 }
 
 void algo_draw_ui(AlgorithmState *state) {
-  ALGO_DISPATCH(state->type, fbm_draw_ui(&state->fbm_state), {});
+  ALGO_DISPATCH(state->type, fbm_draw_ui(&state->fbm_state),
+                erosion_draw_ui(&state->erosion_state));
 }
 
 void algo_cleanup(AlgorithmState *state) {
@@ -90,5 +94,6 @@ void algo_cleanup(AlgorithmState *state) {
   UnloadModel(state->model);
   free(state->image.data);
 
-  ALGO_DISPATCH(state->type, fbm_cleanup(&state->fbm_state), {});
+  ALGO_DISPATCH(state->type, fbm_cleanup(&state->fbm_state),
+                erosion_cleanup(&state->erosion_state));
 }

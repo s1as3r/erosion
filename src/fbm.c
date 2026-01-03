@@ -1,20 +1,7 @@
 /*
  * reference implementation: https://xbdev.net/fractals/fbm/index.php
  */
-#include "base.h"
-#include <math.h>
-
-global f32 g_seed = 0.0f;
-
-typedef struct {
-  u32 octaves;
-  f32 lacunarity;
-  f32 gain;
-} FBMParams;
-
-f32 lerp(f32 a, f32 b, f32 t) { return a + t * (b - a); }
-
-f32 smoothstep(f32 t) { return t * t * (3 - (2 * t)); }
+#include "fbm.h"
 
 f32 random_f(f32 x, f32 y) {
   f32 angle = sinf(x * 12345.6789f + y * 98765.4321f + g_seed) * 43758.5453f;

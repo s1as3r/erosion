@@ -2,6 +2,7 @@
 #include "rand.c"
 #include "fbm.c"
 #include "fbm_raylib.c"
+#include "erosion.c"
 #include "erosion_raylib.c"
 #include "algorithm.c"
 
@@ -10,9 +11,17 @@
 #include <raygui.h>
 // clang-format on
 
+void custom_trace_log(i32 msg_type, const char *text, va_list args) {
+  if (msg_type == LOG_EROSION) {
+    vprintf(text, args);
+    printf("\n");
+  }
+}
+
 i32 main(void) {
   const i32 screen_width = 1200;
   const i32 screen_height = 800;
+  SetTraceLogCallback(custom_trace_log);
   InitWindow(screen_width, screen_height, "erosion");
 
   Vector3 initial_camera_position = {18.0f, 21.0f, 18.0f};

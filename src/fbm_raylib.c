@@ -1,15 +1,14 @@
 // clang-format off
 #include "fbm.h"
 #include "fbm_raylib.h"
+#include "rand.h"
 // clang-format on
 
 global f32 g_slider_x_offset = 0;
 
 void fbm_init(FBMState *state, u32 dim_x, u32 dim_y, u8 *heightmap_data) {
-  state->_octaves_f = INITIAL_OCTAVES;
-  state->params = (FBMParams){.octaves = (u32)INITIAL_OCTAVES,
-                              .lacunarity = INITIAL_LACUNARITY,
-                              .gain = INITIAL_GAIN};
+  state->params = g_default_fbm_params;
+  state->_octaves_f = (f32)state->params.octaves;
   state->prev_params = state->params;
 
   gen_fbm(heightmap_data, dim_x, dim_y, state->params);
@@ -49,13 +48,13 @@ void fbm_draw_ui(FBMState *state) {
   GuiSlider(
       (Rectangle){
           .x = g_slider_x_offset, .y = 40 + 1, .height = 30, .width = 200},
-      "lacunarity: ", TextFormat("%f", state->params.lacunarity),
+      "lacunarity: ", TextFormat("%.2f", state->params.lacunarity),
       &state->params.lacunarity, 1, 5);
 
   GuiSlider(
       (Rectangle){
           .x = g_slider_x_offset, .y = 70 + 2, .height = 30, .width = 200},
-      "gain: ", TextFormat("%f", state->params.gain), &state->params.gain, 0,
+      "gain: ", TextFormat("%.2f", state->params.gain), &state->params.gain, 0,
       1);
 
   state->seed_changed = GuiButton(

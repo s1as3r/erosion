@@ -4,14 +4,12 @@
 #include <raylib.h>
 #include <stdbool.h>
 #include <stdint.h>
-#include <stdlib.h>
 
 #define global static
 #define internal static
 #define local_persist static
 
 #define PI32 3.1415926536f
-
 #define array_count(arr) (sizeof(arr) / sizeof(arr[0]))
 
 // clang-format off
@@ -20,6 +18,9 @@
 #define GB(val) (MB(val) * 1024LL)
 #define TB(val) (GB(val) * 1024LL)
 // clang-format on
+
+#define LOG_EROSION (LOG_NONE + 1)
+#define elog(...) TraceLog(LOG_EROSION, __VA_ARGS__)
 
 typedef int8_t i8;
 typedef int16_t i16;

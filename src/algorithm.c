@@ -1,10 +1,13 @@
 // clang-format off
 #include "fbm_raylib.h"
 #include "erosion_raylib.h"
+#include "stdlib.h"
 // clang-format on
 
 #define INITIAL_DIM_X 256
 #define INITIAL_DIM_Y 256
+
+typedef enum { FBM = 0, Erosion } AlgorithmType;
 
 #define ALGO_DISPATCH(type, fbm_expr, erosion_expr)                            \
   do {                                                                         \
@@ -17,8 +20,6 @@
     } break;                                                                   \
     }                                                                          \
   } while (0)
-
-typedef enum { FBM = 0, Erosion } AlgorithmType;
 
 typedef struct {
   u32 dim_x;
@@ -36,6 +37,7 @@ typedef struct {
 } AlgorithmState;
 
 void algo_init(AlgorithmState *state) {
+  elog("[%s] initializing", state->type == Erosion ? "EROSION" : "FBM");
   state->dim_x = INITIAL_DIM_X;
   state->dim_y = INITIAL_DIM_Y;
   state->image = (Image){.height = INITIAL_DIM_Y,
@@ -58,6 +60,7 @@ void algo_init(AlgorithmState *state) {
 }
 
 void _reload_raylib_stuff(AlgorithmState *state) {
+  elog("[%s] reloading", state->type == Erosion ? "EROSION" : "FBM");
   UnloadTexture(state->texture);
   UnloadModel(state->model);
 
@@ -90,6 +93,7 @@ void algo_draw_ui(AlgorithmState *state) {
 }
 
 void algo_cleanup(AlgorithmState *state) {
+  elog("[%s] cleanup", state->type == Erosion ? "EROSION" : "FBM");
   UnloadTexture(state->texture);
   UnloadModel(state->model);
   free(state->image.data);
@@ -97,3 +101,5 @@ void algo_cleanup(AlgorithmState *state) {
   ALGO_DISPATCH(state->type, fbm_cleanup(&state->fbm_state),
                 erosion_cleanup(&state->erosion_state));
 }
+
+#undef ALGO_DISPATCH

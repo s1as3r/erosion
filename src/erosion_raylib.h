@@ -4,15 +4,21 @@
 // clang-format off
 #include "base.h"
 #include "erosion.h"
-#include "rand.h"
 
 #include <raylib.h>
 #include <raygui.h>
 // clang-format on
 
+#define DEFAULT_ITERATIONS 1000
+
 typedef struct {
   ErosionParams params;
   ErosionParams prev_params;
+  f32 *hmap;
+
+  f32 _iterations_f;
+  u32 iterations;
+  bool generate;
 } ErosionState;
 
 void erosion_init(ErosionState *state, u32 dim_x, u32 dim_y, u8 *data);

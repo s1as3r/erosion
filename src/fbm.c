@@ -1,7 +1,10 @@
 /*
  * reference implementation: https://xbdev.net/fractals/fbm/index.php
  */
+// clang-format off
 #include "fbm.h"
+#include <math.h>
+// clang-format on
 
 f32 random_f(f32 x, f32 y) {
   f32 angle = sinf(x * 12345.6789f + y * 98765.4321f + g_seed) * 43758.5453f;

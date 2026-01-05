@@ -4,15 +4,10 @@
 // clang-format off
 #include "base.h"
 #include "fbm.h"
-#include "rand.h"
 
 #include <raylib.h>
 #include <raygui.h>
 // clang-format on
-
-#define INITIAL_LACUNARITY 1.5f
-#define INITIAL_OCTAVES 5.0f
-#define INITIAL_GAIN 0.5f
 
 typedef struct {
   f32 _octaves_f;

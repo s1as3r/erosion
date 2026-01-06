@@ -3,10 +3,9 @@
 #include "stdlib.h"
 #include "erosion.h"
 #include "fbm_raylib.h"
+#include <raylib.h>
 #include <stdint.h>
 // clang-format on
-
-global f32 g_erosion_slider_x_offset;
 
 void set_data_using_hmap(f32 *hmap, u8 *data, u32 dim_x, u32 dim_y) {
   for (u32 i = 0; i < dim_x; i++) {
@@ -30,28 +29,47 @@ void erosion_init(ErosionState *state, u32 dim_x, u32 dim_y, u8 *data) {
   state->params = g_default_erosion_params;
   state->prev_params = state->params;
   state->iterations = DEFAULT_ITERATIONS;
+  state->iterations_per_frame = DEFAULT_ITER_PER_FRAME;
+  state->_iterations_per_frame_f = (f32)state->iterations_per_frame;
   state->_iterations_f = (f32)state->iterations;
+  state->current_iteration = 0;
+  state->is_generating = false;
+  state->show_fbm_params = false;
+  state->fbm_updated = false;
+  state->generate_btn_clicked = false;
 
   state->hmap = malloc(sizeof(f32) * dim_x * dim_y);
+
+  fbm_init(&state->fbm_state, dim_x, dim_y, data);
+  inv_set_data_using_hmap(state->hmap, data, dim_x, dim_y);
   erosion_gen_data(state, dim_x, dim_y, data);
 
   i32 fonst_size = GuiGetStyle(DEFAULT, TEXT_SIZE);
   g_erosion_slider_x_offset =
       10.0f + (f32)MeasureText("drop lifetime: ", fonst_size);
+  g_erosion_slider_x_offset = g_erosion_slider_x_offset > g_fbm_slider_x_offset
+                                  ? g_erosion_slider_x_offset
+                                  : g_fbm_slider_x_offset;
+
+  g_fbm_slider_x_offset = g_erosion_slider_x_offset;
 }
 
 void erosion_gen_data(ErosionState *state, u32 dim_x, u32 dim_y, u8 *data) {
-  elog("[EROSION] generating data");
-  FBMState fbm_state;
-  fbm_init(&fbm_state, dim_x, dim_y, data);
-  inv_set_data_using_hmap(state->hmap, data, dim_x, dim_y);
-
-  for (u32 i = 0; i < state->iterations; i++) {
-    hydraulic_erosion(state->hmap, &state->params, dim_x, dim_y);
+  if (state->fbm_updated) {
+    fbm_gen_data(&state->fbm_state, dim_x, dim_y, data);
+    inv_set_data_using_hmap(state->hmap, data, dim_x, dim_y);
+  }
+  if (state->is_generating) {
+    for (u32 i = 0; i < state->iterations_per_frame; i++) {
+      hydraulic_erosion(state->hmap, &state->params, dim_x, dim_y);
+    }
+    state->current_iteration += state->iterations_per_frame;
+    if (state->current_iteration >= state->iterations) {
+      state->is_generating = false;
+    }
   }
 
   set_data_using_hmap(state->hmap, data, dim_x, dim_y);
-  elog("[EROSION] data generation finished");
 }
 
 bool erosion_update_state(ErosionState *state) {
@@ -66,25 +84,63 @@ bool erosion_update_state(ErosionState *state) {
 #undef NOT_EQUAL
 
   state->iterations = (u32)state->_iterations_f;
+  state->iterations_per_frame = (u32)state->_iterations_per_frame_f;
 
   if (params_changed) {
     state->prev_params = state->params;
   }
+  state->fbm_updated = fbm_update_state(&state->fbm_state);
+  if (state->generate_btn_clicked) {
+    state->is_generating = !state->is_generating;
+  }
 
-  return params_changed || state->generate;
+  return params_changed || state->is_generating || state->fbm_updated;
 }
 
-void erosion_draw_ui(ErosionState *state) {
+void _draw_erosion_only_ui(ErosionState *state) {
   GuiSlider(
       (Rectangle){
           .x = g_erosion_slider_x_offset, .y = 10, .height = 30, .width = 200},
       "iterations: ", TextFormat("%lu", (u32)state->_iterations_f),
       &state->_iterations_f, 1, 1000000);
-  state->generate = GuiButton((Rectangle){.x = g_erosion_slider_x_offset + 225,
-                                          .y = 10,
-                                          .height = 30,
-                                          .width = 50},
-                              "erode");
+
+  state->generate_btn_clicked =
+      GuiButton((Rectangle){.x = g_erosion_slider_x_offset + 250,
+                            .y = 10,
+                            .height = 30,
+                            .width = 70},
+                state->is_generating ? "stop" : "erode");
+
+  GuiSlider(
+      (Rectangle){.x = g_erosion_slider_x_offset,
+                  .y = 40 + 1,
+                  .height = 30,
+                  .width = 200},
+      "iter/frame: ", TextFormat("%lu", (u32)state->_iterations_per_frame_f),
+      &state->_iterations_per_frame_f, 1, 1000);
 }
 
-void erosion_cleanup(ErosionState *state) { free(state->hmap); }
+void erosion_draw_ui(ErosionState *state) {
+  f32 y_change_ui_button = 0;
+  if (state->show_fbm_params) {
+    fbm_draw_ui(&state->fbm_state);
+    y_change_ui_button = 130 + 4;
+  } else {
+    _draw_erosion_only_ui(state);
+    y_change_ui_button = 70 + 2;
+  }
+  bool change_ui_button_clicked =
+      GuiButton((Rectangle){.x = g_erosion_slider_x_offset,
+                            .y = y_change_ui_button,
+                            .height = 30,
+                            .width = 200},
+                state->show_fbm_params ? "Erosion Params" : "FBM Params");
+  if (change_ui_button_clicked) {
+    state->show_fbm_params = !state->show_fbm_params;
+  }
+}
+
+void erosion_cleanup(ErosionState *state) {
+  fbm_cleanup(&state->fbm_state);
+  free(state->hmap);
+}

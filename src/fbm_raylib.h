@@ -9,6 +9,8 @@
 #include <raygui.h>
 // clang-format on
 
+global f32 g_fbm_slider_x_offset = 0;
+
 typedef struct {
   f32 _octaves_f;
   FBMParams params;

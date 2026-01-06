@@ -162,7 +162,7 @@ void hydraulic_erosion(f32 *hmap, const ErosionParams *params, u32 dim_x,
       .velocity = 1.0f,
   };
 
-  for (int iteration = 0; iteration < params->drop_lifetime; iteration++) {
+  for (int iteration = 0; iteration < (i32)params->drop_lifetime; iteration++) {
     u32 ix = (u32)drop.x;
     u32 iz = (u32)drop.y;
     f32 u = drop.x - (f32)ix;
@@ -235,7 +235,7 @@ void hydraulic_erosion(f32 *hmap, const ErosionParams *params, u32 dim_x,
       // erode terrain
       float erode =
           fminf((capacity - drop.sediment) * params->erosion, -height_dif);
-      drop.sediment += erode_terrain(hmap, old_x, old_y, params->radius, erode,
+      drop.sediment += erode_terrain(hmap, old_x, old_y, (i32)params->radius, erode,
                                      dim_x, dim_y);
     }
 

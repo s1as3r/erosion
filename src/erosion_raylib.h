@@ -17,7 +17,6 @@ global f32 g_erosion_slider_x_offset = 0.0f;
 
 typedef struct {
   ErosionParams params;
-  ErosionParams prev_params;
   FBMState fbm_state;
   f32 *hmap;
 

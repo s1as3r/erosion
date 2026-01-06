@@ -8,7 +8,7 @@
 #include "base.h"
 
 typedef struct {
-  i32 drop_lifetime;
+  f32 drop_lifetime;
   f32 inertia;
   f32 capacity;
   f32 min_capacity;
@@ -16,7 +16,7 @@ typedef struct {
   f32 erosion;
   f32 gravity;
   f32 evaporation;
-  i32 radius;
+  f32 radius;
 } ErosionParams;
 
 global const ErosionParams g_default_erosion_params = {.drop_lifetime = 50,

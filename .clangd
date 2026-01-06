@@ -1,7 +1,7 @@
 CompileFlags:
   Add: [
     "-xc",
-    "-Wall"
+    "-Wall",
     "-Wextra",
     "-Wpedantic",
     "-Wconversion",

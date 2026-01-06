@@ -58,7 +58,7 @@ void erosion_gen_data(ErosionState *state, u32 dim_x, u32 dim_y, u8 *data) {
     inv_set_data_using_hmap(state->hmap, data, dim_x, dim_y);
   }
   if (state->is_generating) {
-    for (u32 i = 0; i < state->iterations_per_frame; i++) {
+    for (u32 i = 0; i < (u32)state->iterations_per_frame; i++) {
       hydraulic_erosion(state->hmap, &state->params, dim_x, dim_y);
     }
     state->current_iteration += (u32)state->iterations_per_frame;
@@ -96,7 +96,7 @@ void _draw_erosion_only_ui(ErosionState *state) {
   GuiSlider(
       (Rectangle){
           .x = g_erosion_slider_x_offset, .y = 10, .height = 30, .width = 200},
-      "iterations: ", TextFormat("%lu", (u32)state->iterations),
+      "iterations: ", TextFormat("%u", (u32)state->iterations),
       &state->iterations, 1, 1000000);
 
   state->generate_btn_clicked =
@@ -110,7 +110,7 @@ void _draw_erosion_only_ui(ErosionState *state) {
                         .y = 40 + 1,
                         .height = 30,
                         .width = 200},
-            "iter/frame: ", TextFormat("%lu", (u32)state->iterations_per_frame),
+            "iter/frame: ", TextFormat("%u", (u32)state->iterations_per_frame),
             &state->iterations_per_frame, 1, 1000);
 }
 

@@ -39,7 +39,7 @@ void fbm_draw_ui(FBMState *state) {
   GuiSlider(
       (Rectangle){
           .x = g_fbm_slider_x_offset, .y = 10, .height = 30, .width = 200},
-      "octaves: ", TextFormat("%d", (i32)state->params.octaves),
+      "octaves: ", TextFormat("%u", (u32)state->params.octaves),
       &state->params.octaves, 1, 10);
 
   GuiSlider(

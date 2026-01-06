@@ -30,8 +30,6 @@ void erosion_init(ErosionState *state, u32 dim_x, u32 dim_y, u8 *data) {
   state->prev_params = state->params;
   state->iterations = DEFAULT_ITERATIONS;
   state->iterations_per_frame = DEFAULT_ITER_PER_FRAME;
-  state->_iterations_per_frame_f = (f32)state->iterations_per_frame;
-  state->_iterations_f = (f32)state->iterations;
   state->current_iteration = 0;
   state->is_generating = false;
   state->show_fbm_params = false;
@@ -63,8 +61,8 @@ void erosion_gen_data(ErosionState *state, u32 dim_x, u32 dim_y, u8 *data) {
     for (u32 i = 0; i < state->iterations_per_frame; i++) {
       hydraulic_erosion(state->hmap, &state->params, dim_x, dim_y);
     }
-    state->current_iteration += state->iterations_per_frame;
-    if (state->current_iteration >= state->iterations) {
+    state->current_iteration += (u32)state->iterations_per_frame;
+    if (state->current_iteration >= (u32)state->iterations) {
       state->is_generating = false;
     }
   }
@@ -83,9 +81,6 @@ bool erosion_update_state(ErosionState *state) {
       NOT_EQUAL(gravity) || NOT_EQUAL(evaporation) || NOT_EQUAL(radius);
 #undef NOT_EQUAL
 
-  state->iterations = (u32)state->_iterations_f;
-  state->iterations_per_frame = (u32)state->_iterations_per_frame_f;
-
   if (params_changed) {
     state->prev_params = state->params;
   }
@@ -101,8 +96,8 @@ void _draw_erosion_only_ui(ErosionState *state) {
   GuiSlider(
       (Rectangle){
           .x = g_erosion_slider_x_offset, .y = 10, .height = 30, .width = 200},
-      "iterations: ", TextFormat("%lu", (u32)state->_iterations_f),
-      &state->_iterations_f, 1, 1000000);
+      "iterations: ", TextFormat("%lu", (u32)state->iterations),
+      &state->iterations, 1, 1000000);
 
   state->generate_btn_clicked =
       GuiButton((Rectangle){.x = g_erosion_slider_x_offset + 250,
@@ -111,13 +106,12 @@ void _draw_erosion_only_ui(ErosionState *state) {
                             .width = 70},
                 state->is_generating ? "stop" : "erode");
 
-  GuiSlider(
-      (Rectangle){.x = g_erosion_slider_x_offset,
-                  .y = 40 + 1,
-                  .height = 30,
-                  .width = 200},
-      "iter/frame: ", TextFormat("%lu", (u32)state->_iterations_per_frame_f),
-      &state->_iterations_per_frame_f, 1, 1000);
+  GuiSlider((Rectangle){.x = g_erosion_slider_x_offset,
+                        .y = 40 + 1,
+                        .height = 30,
+                        .width = 200},
+            "iter/frame: ", TextFormat("%lu", (u32)state->iterations_per_frame),
+            &state->iterations_per_frame, 1, 1000);
 }
 
 void erosion_draw_ui(ErosionState *state) {

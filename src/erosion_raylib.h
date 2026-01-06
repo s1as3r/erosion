@@ -10,8 +10,8 @@
 #include <raygui.h>
 // clang-format on
 
-#define DEFAULT_ITERATIONS 10000
-#define DEFAULT_ITER_PER_FRAME 100
+#define DEFAULT_ITERATIONS 10000.0f
+#define DEFAULT_ITER_PER_FRAME 100.0f
 
 global f32 g_erosion_slider_x_offset = 0.0f;
 
@@ -21,11 +21,9 @@ typedef struct {
   FBMState fbm_state;
   f32 *hmap;
 
-  f32 _iterations_f;
-  u32 iterations;
+  f32 iterations;
   u32 current_iteration;
-  u32 iterations_per_frame;
-  f32 _iterations_per_frame_f;
+  f32 iterations_per_frame;
   bool generate_btn_clicked;
   bool is_generating;
   bool show_fbm_params;

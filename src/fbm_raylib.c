@@ -6,7 +6,6 @@
 
 void fbm_init(FBMState *state, u32 dim_x, u32 dim_y, u8 *heightmap_data) {
   state->params = g_default_fbm_params;
-  state->_octaves_f = (f32)state->params.octaves;
   state->prev_params = state->params;
 
   gen_fbm(heightmap_data, dim_x, dim_y, state->params);
@@ -20,9 +19,8 @@ void fbm_gen_data(FBMState *state, u32 dim_x, u32 dim_y, u8 *data) {
 }
 
 bool fbm_update_state(FBMState *state) {
-  state->params.octaves = (u32)state->_octaves_f;
   bool params_changed =
-      (state->prev_params.octaves != state->params.octaves) ||
+      ((u32)state->prev_params.octaves != (u32)state->params.octaves) ||
       (state->prev_params.gain != state->params.gain) ||
       (state->prev_params.lacunarity != state->params.lacunarity);
 
@@ -41,8 +39,8 @@ void fbm_draw_ui(FBMState *state) {
   GuiSlider(
       (Rectangle){
           .x = g_fbm_slider_x_offset, .y = 10, .height = 30, .width = 200},
-      "octaves: ", TextFormat("%d", (i32)state->_octaves_f), &state->_octaves_f,
-      1, 10);
+      "octaves: ", TextFormat("%d", (i32)state->params.octaves),
+      &state->params.octaves, 1, 10);
 
   GuiSlider(
       (Rectangle){

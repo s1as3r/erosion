@@ -28,7 +28,7 @@ u32 pcg32_random_r(PCG32RandomState *rng) {
   rng->state = oldstate * 6364136223846793005ULL + (rng->inc | 1);
   // Calculate output function (XSH RR), uses old state for max ILP
   u32 xorshifted = (u32)(((oldstate >> 18u) ^ oldstate) >> 27u);
-  u32 rot = oldstate >> 59u;
+  u32 rot = (u32)(oldstate >> 59u);
   return (xorshifted >> rot) | (xorshifted << ((-rot) & 31));
 }
 

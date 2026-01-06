@@ -99,21 +99,21 @@ i32 main(void) {
                          GREEN);
 
       algo_dropdown_clicked = GuiDropdownBox(
-          (Rectangle){.x = (screen_width / 2.0f) - 150.0f - 1.0f,
+          (Rectangle){.x = ((f32)screen_width / 2.0f) - 150.0f - 1.0f,
                       .y = 10.0f,
                       .height = 30,
                       .width = 100},
           "fbm;erosion", (int *)&algo_selection, algo_dropdown_active);
 
       camera_dropdown_clicked =
-          GuiDropdownBox((Rectangle){.x = (screen_width / 2.0f) - 50.0f,
+          GuiDropdownBox((Rectangle){.x = ((f32)screen_width / 2.0f) - 50.0f,
                                      .y = 10.0f,
                                      .height = 30,
                                      .width = 100},
                          "Free;Orbital;Static", (int *)&camera_model_selection,
                          camera_dropdown_active);
       reset_camera =
-          GuiButton((Rectangle){.x = (screen_width / 2.0f) + 50.0f + 1.0f,
+          GuiButton((Rectangle){.x = ((f32)screen_width / 2.0f) + 50.0f + 1.0f,
                                 .y = 10.0f,
                                 .height = 30.0f,
                                 .width = 100},

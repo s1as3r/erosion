@@ -9,7 +9,7 @@
 global f32 g_seed = 0.0f;
 
 typedef struct {
-  u32 octaves;
+  f32 octaves;
   f32 lacunarity;
   f32 gain;
 } FBMParams;

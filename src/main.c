@@ -74,6 +74,9 @@ i32 main(void) {
     }
 
     camera_mode = camera_model_selection + 1;
+    if (camera_mode == 3) {
+      camera_mode = CAMERA_CUSTOM;
+    }
     UpdateCamera(&camera, camera_mode);
 
     algo_update_state(&algo_state);
@@ -94,7 +97,7 @@ i32 main(void) {
                                      .y = 10.0f,
                                      .height = 30,
                                      .width = 100},
-                         "Free;Orbital", (int *)&camera_model_selection,
+                         "Free;Orbital;Static", (int *)&camera_model_selection,
                          camera_dropdown_active);
       reset_camera =
           GuiButton((Rectangle){.x = (screen_width / 2.0f) + 50.0f + 1.0f,

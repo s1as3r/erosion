@@ -85,6 +85,19 @@ i32 main(void) {
     {
       ClearBackground(RAYWHITE);
 
+      BeginMode3D(camera);
+      {
+        DrawModel(algo_state.model, map_position, 1.0f, RED);
+        DrawGrid(20, 1.0f);
+      }
+      EndMode3D();
+
+      DrawTexture(algo_state.texture,
+                  screen_width - algo_state.texture.width - 20, 20, WHITE);
+      DrawRectangleLines(screen_width - algo_state.texture.width - 20, 20,
+                         algo_state.texture.width, algo_state.texture.height,
+                         GREEN);
+
       algo_dropdown_clicked = GuiDropdownBox(
           (Rectangle){.x = (screen_width / 2.0f) - 150.0f - 1.0f,
                       .y = 10.0f,
@@ -107,19 +120,6 @@ i32 main(void) {
                     "Reset Camera");
 
       algo_draw_ui(&algo_state);
-
-      BeginMode3D(camera);
-      {
-        DrawModel(algo_state.model, map_position, 1.0f, RED);
-        DrawGrid(20, 1.0f);
-      }
-      EndMode3D();
-
-      DrawTexture(algo_state.texture,
-                  screen_width - algo_state.texture.width - 20, 20, WHITE);
-      DrawRectangleLines(screen_width - algo_state.texture.width - 20, 20,
-                         algo_state.texture.width, algo_state.texture.height,
-                         GREEN);
     }
     EndDrawing();
   }

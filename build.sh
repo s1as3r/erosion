@@ -26,12 +26,14 @@ LIBS=(
 COMP_FLAGS=(
     "-Wall"
     "-Wextra"
+    "-Wpedantic"
+    "-Wconversion"
     "-Werror"
     "-Wno-unused-parameter"
     "-Wno-unused-function"
     "-Wno-unused-variable"
     "-O0"
-    "-std=c99"
+    "-std=c11"
     "-fPIC"
 )
 

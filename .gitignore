@@ -1,5 +1,6 @@
 *.raddbg
 raylib/
+raygui/
 build/
 # Prerequisites
 *.d

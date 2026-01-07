@@ -80,6 +80,7 @@ jobs:
                   -L../../raylib/src ^
                   -sUSE_GLFW=3 ^
                   -sASYNCIFY ^
+                  --shell-file minshell.html ^
                   -DPLATFORM_WEB
       shell: cmd
   

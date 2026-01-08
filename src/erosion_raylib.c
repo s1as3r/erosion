@@ -31,7 +31,7 @@ void erosion_init(ErosionState *state, u32 dim_x, u32 dim_y, u8 *data) {
   state->iterations_per_frame = DEFAULT_ITER_PER_FRAME;
   state->current_iteration = 0;
   state->is_generating = false;
-  state->show_fbm_params = false;
+  state->show_fbm_params = true;
   state->fbm_updated = false;
   state->generate_btn_clicked = false;
 

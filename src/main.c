@@ -35,8 +35,8 @@ i32 main(void) {
   camera.fovy = 45.0f;
   camera.projection = CAMERA_PERSPECTIVE;
 
-  AlgorithmType algo_selection = 0;
-  AlgorithmType prev_algo_selection = 0;
+  AlgorithmType algo_selection = Erosion;
+  AlgorithmType prev_algo_selection = Erosion;
   AlgorithmState algo_state = {.type = algo_selection};
   algo_init(&algo_state);
 

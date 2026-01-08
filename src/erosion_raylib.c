@@ -98,7 +98,7 @@ f32 _draw_erosion_only_ui(ErosionState *state, f32 slider_x_offset) {
   GuiSlider(
       (Rectangle){
           .x = slider_x_offset, .y = y_offset, .height = 30, .width = 200},
-      "min_capacity: ", TextFormat("%u", state->params.min_capacity),
+      "min_capacity: ", TextFormat("%.2f", state->params.min_capacity),
       &state->params.min_capacity, 0, 1.0f);
   y_offset += 31;
 

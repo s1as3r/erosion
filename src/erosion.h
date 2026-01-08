@@ -5,7 +5,9 @@
 #ifndef _H_EROSION
 #define _H_EROSION
 
+// clang-format off
 #include "base.h"
+// clang-format on
 
 typedef struct {
   f32 drop_lifetime;

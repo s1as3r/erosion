@@ -4,7 +4,9 @@
 #ifndef _H_EROSION_FBM
 #define _H_EROSION_FBM
 
+// clang-format off
 #include "base.h"
+// clang-format on
 
 global f32 g_seed = 0.0f;
 

@@ -20,7 +20,9 @@
  *
  *       http://www.pcg-random.org
  */
+// clang-format off
 #include "rand.h"
+// clang-format on
 
 u32 pcg32_random_r(PCG32RandomState *rng) {
   u64 oldstate = rng->state;

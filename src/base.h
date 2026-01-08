@@ -1,9 +1,11 @@
 #ifndef _H_EROSION_DEFS
 #define _H_EROSION_DEFS
 
+// clang-format off
 #include <raylib.h>
 #include <stdbool.h>
 #include <stdint.h>
+// clang-format on
 
 #define global static
 #define internal static

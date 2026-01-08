@@ -1,7 +1,8 @@
 // clang-format off
 #include "fbm_raylib.h"
 #include "erosion_raylib.h"
-#include "stdlib.h"
+
+#include <stdlib.h>
 // clang-format on
 
 #define INITIAL_DIM_X 256

@@ -5,9 +5,9 @@
 // clang-format off
 #include "erosion.h"
 #include "rand.h"
-#include "stdlib.h"
+
+#include <stdlib.h>
 #include <math.h>
-#include "float.h"
 // clang-format on
 
 typedef struct {
@@ -235,8 +235,8 @@ void hydraulic_erosion(f32 *hmap, const ErosionParams *params, u32 dim_x,
       // erode terrain
       float erode =
           fminf((capacity - drop.sediment) * params->erosion, -height_dif);
-      drop.sediment += erode_terrain(hmap, old_x, old_y, (i32)params->radius, erode,
-                                     dim_x, dim_y);
+      drop.sediment += erode_terrain(hmap, old_x, old_y, (i32)params->radius,
+                                     erode, dim_x, dim_y);
     }
 
     // update drop velocity and water content

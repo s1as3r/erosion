@@ -3,6 +3,7 @@
  */
 // clang-format off
 #include "fbm.h"
+
 #include <math.h>
 // clang-format on
 

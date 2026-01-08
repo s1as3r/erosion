@@ -23,7 +23,9 @@
 #ifndef _H_EROSION_RAND
 #define _H_EROSION_RAND
 
+// clang-format off
 #include "base.h"
+// clang-format on
 
 typedef struct {
   u64 state;

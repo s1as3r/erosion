@@ -1,10 +1,11 @@
 // clang-format off
 #include "erosion_raylib.h"
-#include "stdlib.h"
 #include "erosion.h"
 #include "fbm_raylib.h"
+
 #include <raylib.h>
 #include <stdint.h>
+#include <stdlib.h>
 // clang-format on
 
 void set_data_using_hmap(f32 *hmap, u8 *data, u32 dim_x, u32 dim_y) {

@@ -46,7 +46,7 @@ f32 fbm(f32 x, f32 y, FBMParams params) {
   f32 amplitude = 1.0f;
   f32 max_val = 0.0f;
 
-  for (u32 i = 0; i < params.octaves; i++) {
+  for (u32 i = 0; i < (u32)params.octaves; i++) {
     total += perlin(x * freq, y * freq) * amplitude;
     max_val += amplitude;
     freq *= params.lacunarity;

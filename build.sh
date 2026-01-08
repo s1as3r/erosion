@@ -2,6 +2,7 @@
 BUILD_PATH="build"
 SRC="../src"
 EXE_NAME="erosion"
+COMPILER="gcc"
 
 # debug flags
 DEBUG=(
@@ -32,13 +33,13 @@ COMP_FLAGS=(
     "-Wno-unused-parameter"
     "-Wno-unused-function"
     "-Wno-unused-variable"
-    "-O0"
+    "-Og"
     "-std=c11"
     "-fPIC"
 )
 
 # Build commands
-EXE_CMD=("gcc" "${DEFINES[@]}" "${DEBUG[@]}" "${COMP_FLAGS[@]}" \
+EXE_CMD=("$COMPILER" "${DEFINES[@]}" "${DEBUG[@]}" "${COMP_FLAGS[@]}" \
          "-o" "$EXE_NAME" "$SRC/main.c" "${LIBS[@]}")
 
 EXE_CMD_STR=$(IFS=' '; echo "${EXE_CMD[*]}")
@@ -49,7 +50,7 @@ if [[ ! -d "$BUILD_PATH" ]]; then
     mkdir -p "$BUILD_PATH"
 fi
 
-cd "$BUILD_PATH"
+cd "$BUILD_PATH" || exit
 echo "===== $EXE_NAME ====="
 echo "$EXE_CMD_STR"
 eval "$EXE_CMD_STR"

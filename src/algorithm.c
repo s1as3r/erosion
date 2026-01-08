@@ -60,7 +60,7 @@ void algo_init(AlgorithmState *state) {
 }
 
 void _reload_raylib_stuff(AlgorithmState *state) {
-  elog("[%s] reloading", state->type == Erosion ? "EROSION" : "FBM");
+  // elog("[%s] reloading", state->type == Erosion ? "EROSION" : "FBM");
   UnloadTexture(state->texture);
   UnloadModel(state->model);
 

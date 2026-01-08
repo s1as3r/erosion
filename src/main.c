@@ -49,6 +49,10 @@ i32 main(void) {
   const f32 slider_x_offset =
       15.0f + (f32)MeasureText("drop lifetime: ", font_size);
 
+  const i32 texture_draw_width = 256;
+  const f32 texture_draw_scale =
+      (f32)texture_draw_width / (f32)algo_state.texture.width;
+
   bool algo_dropdown_clicked = false;
   bool algo_dropdown_active = false;
 
@@ -96,11 +100,12 @@ i32 main(void) {
       }
       EndMode3D();
 
-      DrawTexture(algo_state.texture,
-                  screen_width - algo_state.texture.width - 20, 20, WHITE);
-      DrawRectangleLines(screen_width - algo_state.texture.width - 20, 20,
-                         algo_state.texture.width, algo_state.texture.height,
-                         GREEN);
+      DrawTextureEx(algo_state.texture,
+                    (Vector2){screen_width - texture_draw_width - 20, 20}, 0.0f,
+                    texture_draw_scale, WHITE);
+      DrawRectangleLines(
+          screen_width - texture_draw_width - 20, 20, texture_draw_width,
+          (i32)((f32)algo_state.texture.height * texture_draw_scale), GREEN);
 
       algo_dropdown_clicked = GuiDropdownBox(
           (Rectangle){.x = ((f32)screen_width / 2.0f) - 150.0f - 1.0f,

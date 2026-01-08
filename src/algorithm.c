@@ -87,9 +87,9 @@ void algo_update_state(AlgorithmState *state) {
   }
 }
 
-void algo_draw_ui(AlgorithmState *state) {
-  ALGO_DISPATCH(state->type, fbm_draw_ui(&state->fbm_state),
-                erosion_draw_ui(&state->erosion_state));
+void algo_draw_ui(AlgorithmState *state, f32 slider_x_offset) {
+  ALGO_DISPATCH(state->type, fbm_draw_ui(&state->fbm_state, slider_x_offset),
+                erosion_draw_ui(&state->erosion_state, slider_x_offset));
 }
 
 void algo_cleanup(AlgorithmState *state) {

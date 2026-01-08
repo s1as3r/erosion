@@ -9,8 +9,6 @@
 #include <raygui.h>
 // clang-format on
 
-global f32 g_fbm_slider_x_offset = 0;
-
 typedef struct {
   FBMParams params;
   FBMParams prev_params;
@@ -22,7 +20,7 @@ typedef struct {
 void fbm_init(FBMState *state, u32 dim_x, u32 dim_y, u8 *heightmap_data);
 void fbm_gen_data(FBMState *state, u32 dim_x, u32 dim_y, u8 *data);
 bool fbm_update_state(FBMState *state);
-void fbm_draw_ui(FBMState *state);
+void fbm_draw_ui(FBMState *state, f32 slider_x_offset);
 void fbm_cleanup(FBMState *state);
 
 #endif // _H_EROSION_FBM_RAYLIB

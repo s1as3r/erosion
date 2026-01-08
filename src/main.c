@@ -45,6 +45,10 @@ i32 main(void) {
   i32 camera_model_selection = 1;
   i32 camera_mode;
 
+  const i32 font_size = GuiGetStyle(DEFAULT, TEXT_SIZE);
+  const f32 slider_x_offset =
+      15.0f + (f32)MeasureText("drop lifetime: ", font_size);
+
   bool algo_dropdown_clicked = false;
   bool algo_dropdown_active = false;
 
@@ -119,7 +123,7 @@ i32 main(void) {
                                 .width = 100},
                     "Reset Camera");
 
-      algo_draw_ui(&algo_state);
+      algo_draw_ui(&algo_state, slider_x_offset);
     }
     EndDrawing();
   }

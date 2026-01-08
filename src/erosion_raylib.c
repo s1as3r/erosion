@@ -40,15 +40,6 @@ void erosion_init(ErosionState *state, u32 dim_x, u32 dim_y, u8 *data) {
   fbm_init(&state->fbm_state, dim_x, dim_y, data);
   inv_set_data_using_hmap(state->hmap, data, dim_x, dim_y);
   erosion_gen_data(state, dim_x, dim_y, data);
-
-  i32 fonst_size = GuiGetStyle(DEFAULT, TEXT_SIZE);
-  g_erosion_slider_x_offset =
-      10.0f + (f32)MeasureText("drop lifetime: ", fonst_size);
-  g_erosion_slider_x_offset = g_erosion_slider_x_offset > g_fbm_slider_x_offset
-                                  ? g_erosion_slider_x_offset
-                                  : g_fbm_slider_x_offset;
-
-  g_fbm_slider_x_offset = g_erosion_slider_x_offset;
 }
 
 void erosion_gen_data(ErosionState *state, u32 dim_x, u32 dim_y, u8 *data) {
@@ -80,119 +71,105 @@ bool erosion_update_state(ErosionState *state) {
   return state->is_generating || state->fbm_updated;
 }
 
-f32 _draw_erosion_only_ui(ErosionState *state) {
+f32 _draw_erosion_only_ui(ErosionState *state, f32 slider_x_offset) {
   f32 y_offset = 10;
   GuiSlider(
-      (Rectangle){.x = g_erosion_slider_x_offset,
-                  .y = y_offset,
-                  .height = 30,
-                  .width = 200},
+      (Rectangle){
+          .x = slider_x_offset, .y = y_offset, .height = 30, .width = 200},
       "drop_lifetime: ", TextFormat("%d", (i32)state->params.drop_lifetime),
       &state->params.drop_lifetime, 1, 500);
   y_offset += 31;
 
-  GuiSlider((Rectangle){.x = g_erosion_slider_x_offset,
-                        .y = y_offset,
-                        .height = 30,
-                        .width = 200},
-            "inertia: ", TextFormat("%.2f", state->params.inertia),
-            &state->params.inertia, 0, 1.0f);
+  GuiSlider(
+      (Rectangle){
+          .x = slider_x_offset, .y = y_offset, .height = 30, .width = 200},
+      "inertia: ", TextFormat("%.2f", state->params.inertia),
+      &state->params.inertia, 0, 1.0f);
   y_offset += 31;
 
-  GuiSlider((Rectangle){.x = g_erosion_slider_x_offset,
-                        .y = y_offset,
-                        .height = 30,
-                        .width = 200},
-            "capacity: ", TextFormat("%.2f", state->params.capacity),
-            &state->params.capacity, 1, 10);
+  GuiSlider(
+      (Rectangle){
+          .x = slider_x_offset, .y = y_offset, .height = 30, .width = 200},
+      "capacity: ", TextFormat("%.2f", state->params.capacity),
+      &state->params.capacity, 1, 10);
   y_offset += 31;
 
-  GuiSlider((Rectangle){.x = g_erosion_slider_x_offset,
-                        .y = y_offset,
-                        .height = 30,
-                        .width = 200},
-            "min_capacity: ", TextFormat("%u", state->params.min_capacity),
-            &state->params.min_capacity, 0, 1.0f);
+  GuiSlider(
+      (Rectangle){
+          .x = slider_x_offset, .y = y_offset, .height = 30, .width = 200},
+      "min_capacity: ", TextFormat("%u", state->params.min_capacity),
+      &state->params.min_capacity, 0, 1.0f);
   y_offset += 31;
 
-  GuiSlider((Rectangle){.x = g_erosion_slider_x_offset,
-                        .y = y_offset,
-                        .height = 30,
-                        .width = 200},
-            "deposition: ", TextFormat("%.2f", state->params.deposition),
-            &state->params.deposition, 0, 1);
+  GuiSlider(
+      (Rectangle){
+          .x = slider_x_offset, .y = y_offset, .height = 30, .width = 200},
+      "deposition: ", TextFormat("%.2f", state->params.deposition),
+      &state->params.deposition, 0, 1);
   y_offset += 31;
 
-  GuiSlider((Rectangle){.x = g_erosion_slider_x_offset,
-                        .y = y_offset,
-                        .height = 30,
-                        .width = 200},
-            "erosion: ", TextFormat("%.2f", state->params.erosion),
-            &state->params.erosion, 0, 1);
+  GuiSlider(
+      (Rectangle){
+          .x = slider_x_offset, .y = y_offset, .height = 30, .width = 200},
+      "erosion: ", TextFormat("%.2f", state->params.erosion),
+      &state->params.erosion, 0, 1);
   y_offset += 31;
 
-  GuiSlider((Rectangle){.x = g_erosion_slider_x_offset,
-                        .y = y_offset,
-                        .height = 30,
-                        .width = 200},
-            "gravity: ", TextFormat("%.2f", state->params.gravity),
-            &state->params.gravity, 0, 50);
+  GuiSlider(
+      (Rectangle){
+          .x = slider_x_offset, .y = y_offset, .height = 30, .width = 200},
+      "gravity: ", TextFormat("%.2f", state->params.gravity),
+      &state->params.gravity, 0, 50);
   y_offset += 31;
 
-  GuiSlider((Rectangle){.x = g_erosion_slider_x_offset,
-                        .y = y_offset,
-                        .height = 30,
-                        .width = 200},
-            "evaporation: ", TextFormat("%.2f", state->params.evaporation),
-            &state->params.evaporation, 0, 1);
+  GuiSlider(
+      (Rectangle){
+          .x = slider_x_offset, .y = y_offset, .height = 30, .width = 200},
+      "evaporation: ", TextFormat("%.2f", state->params.evaporation),
+      &state->params.evaporation, 0, 1);
   y_offset += 31;
 
-  GuiSlider((Rectangle){.x = g_erosion_slider_x_offset,
-                        .y = y_offset,
-                        .height = 30,
-                        .width = 200},
-            "radius: ", TextFormat("%d", (i32)state->params.radius),
-            &state->params.radius, 0, 20);
+  GuiSlider(
+      (Rectangle){
+          .x = slider_x_offset, .y = y_offset, .height = 30, .width = 200},
+      "radius: ", TextFormat("%d", (i32)state->params.radius),
+      &state->params.radius, 0, 20);
   y_offset += 31;
 
   y_offset += 10;
-  GuiSlider((Rectangle){.x = g_erosion_slider_x_offset,
-                        .y = y_offset,
-                        .height = 30,
-                        .width = 200},
-            "iterations: ", TextFormat("%u", (u32)state->iterations),
-            &state->iterations, 1, 1000000);
+  GuiSlider(
+      (Rectangle){
+          .x = slider_x_offset, .y = y_offset, .height = 30, .width = 200},
+      "iterations: ", TextFormat("%u", (u32)state->iterations),
+      &state->iterations, 1, 1000000);
   y_offset += 31;
 
-  GuiSlider((Rectangle){.x = g_erosion_slider_x_offset,
-                        .y = y_offset,
-                        .height = 30,
-                        .width = 200},
-            "iter/frame: ", TextFormat("%u", (u32)state->iterations_per_frame),
-            &state->iterations_per_frame, 1, 1000);
+  GuiSlider(
+      (Rectangle){
+          .x = slider_x_offset, .y = y_offset, .height = 30, .width = 200},
+      "iter/frame: ", TextFormat("%u", (u32)state->iterations_per_frame),
+      &state->iterations_per_frame, 1, 1000);
   y_offset += 31;
 
-  state->generate_btn_clicked =
-      GuiButton((Rectangle){.x = g_erosion_slider_x_offset,
-                            .y = y_offset,
-                            .height = 30,
-                            .width = 200},
-                state->is_generating ? "stop erosion" : "start erosion");
+  state->generate_btn_clicked = GuiButton(
+      (Rectangle){
+          .x = slider_x_offset, .y = y_offset, .height = 30, .width = 200},
+      state->is_generating ? "stop erosion" : "start erosion");
 
   y_offset += 31;
   return y_offset;
 }
 
-void erosion_draw_ui(ErosionState *state) {
+void erosion_draw_ui(ErosionState *state, f32 slider_x_offset) {
   f32 y_change_ui_button = 0;
   if (state->show_fbm_params) {
-    fbm_draw_ui(&state->fbm_state);
+    fbm_draw_ui(&state->fbm_state, slider_x_offset);
     y_change_ui_button = 130 + 4;
   } else {
-    y_change_ui_button = _draw_erosion_only_ui(state);
+    y_change_ui_button = _draw_erosion_only_ui(state, slider_x_offset);
   }
   bool change_ui_button_clicked =
-      GuiButton((Rectangle){.x = g_erosion_slider_x_offset,
+      GuiButton((Rectangle){.x = slider_x_offset,
                             .y = y_change_ui_button,
                             .height = 30,
                             .width = 200},

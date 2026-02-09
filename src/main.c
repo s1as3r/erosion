@@ -19,10 +19,10 @@ void custom_trace_log(i32 msg_type, const char *text, va_list args) {
 }
 
 i32 main(void) {
-  const i32 screen_width = 1200;
-  const i32 screen_height = 800;
+  const i32 initial_screen_width = 1200;
+  const i32 initial_screen_height = 800;
   SetTraceLogCallback(custom_trace_log);
-  InitWindow(screen_width, screen_height, "erosion");
+  InitWindow(initial_screen_width, initial_screen_height, "erosion");
 
   Vector3 initial_camera_position = {18.0f, 21.0f, 18.0f};
   Vector3 initial_camera_target = {0.0f, 0.0f, 0.0f};
@@ -59,7 +59,9 @@ i32 main(void) {
   bool reset_camera = false;
   bool camera_dropdown_active = false;
   bool camera_dropdown_clicked = false;
+  i32 screen_width;
   while (!WindowShouldClose()) {
+    screen_width = GetScreenWidth();
     if (prev_algo_selection != algo_selection) {
       algo_cleanup(&algo_state);
       algo_state.type = algo_selection;
@@ -100,9 +102,10 @@ i32 main(void) {
       }
       EndMode3D();
 
-      DrawTextureEx(algo_state.texture,
-                    (Vector2){screen_width - texture_draw_width - 20, 20}, 0.0f,
-                    texture_draw_scale, WHITE);
+      DrawTextureEx(
+          algo_state.texture,
+          (Vector2){(f32)(screen_width - texture_draw_width - 20), 20.0f}, 0.0f,
+          texture_draw_scale, WHITE);
       DrawRectangleLines(
           screen_width - texture_draw_width - 20, 20, texture_draw_width,
           (i32)((f32)algo_state.texture.height * texture_draw_scale), GREEN);

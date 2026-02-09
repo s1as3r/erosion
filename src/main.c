@@ -21,6 +21,7 @@ void custom_trace_log(i32 msg_type, const char *text, va_list args) {
 i32 main(void) {
   const i32 initial_screen_width = 1200;
   const i32 initial_screen_height = 800;
+  SetConfigFlags(FLAG_WINDOW_RESIZABLE);;
   SetTraceLogCallback(custom_trace_log);
   InitWindow(initial_screen_width, initial_screen_height, "erosion");
 
